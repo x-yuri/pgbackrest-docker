@@ -1,0 +1,6 @@
+FROM alpine:3.15
+COPY backups.sh ./
+COPY pgbackrest-backups.conf /etc/pgbackrest/pgbackrest.conf
+RUN set -x && apk add --no-cache pgbackrest openssh wait4ports pwgen \
+    && set +x && echo "root:`pwgen -1`" | chpasswd && set -x
+CMD ["./backups.sh"]

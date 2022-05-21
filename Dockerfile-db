@@ -1,0 +1,8 @@
+FROM postgres:12-alpine3.15
+COPY postgresql.conf db.sh ./
+COPY db-init.sh /docker-entrypoint-initdb.d
+COPY pgbackrest-db.conf /etc/pgbackrest/pgbackrest.conf
+RUN set -x && apk add --no-cache pgbackrest openssh pwgen \
+    && pg_versions uninstall \
+    && set +x && echo "postgres:`pwgen -1`" | chpasswd && set -x
+CMD ["./db.sh"]

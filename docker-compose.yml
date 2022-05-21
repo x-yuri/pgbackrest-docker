@@ -1,0 +1,31 @@
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile-db
+    init: yes
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      DONT_START_DB: $DONT_START_DB
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./host-keys:/host-keys
+      - ./id_rsa:/id_rsa
+      - ./authorized_keys:/authorized_keys
+      - ./known_hosts-db:/known_hosts
+
+  backups:
+    build:
+      context: .
+      dockerfile: Dockerfile-backups
+    init: yes
+    volumes:
+      - backups:/var/lib/pgbackrest
+      - ./host-keys:/host-keys
+      - ./id_rsa:/id_rsa
+      - ./authorized_keys:/authorized_keys
+      - ./known_hosts-backups:/known_hosts
+
+volumes:
+  db:
+  backups:
