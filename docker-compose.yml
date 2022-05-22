@@ -19,6 +19,12 @@ services:
       context: .
       dockerfile: Dockerfile-backups
     init: yes
+    environment:
+      DISABLE_BACKUPS: $DISABLE_BACKUPS
+      MAILGUN_KEY: $MAILGUN_KEY
+      MAILGUN_DOMAIN: $MAILGUN_DOMAIN
+      MAILGUN_FROM: $MAILGUN_FROM
+      MAILGUN_TO: $MAILGUN_TO
     volumes:
       - backups:/var/lib/pgbackrest
       - ./host-keys:/host-keys

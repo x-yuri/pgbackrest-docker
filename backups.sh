@@ -7,4 +7,8 @@ if [ "`ls /var/lib/pgbackrest | wc -l`" = 0 ]; then
     wait4ports tcp://db:5432
     pgbackrest --stanza=db --log-level-console info stanza-create
 fi
-exec sleep infinity
+if [ "${DISABLE_BACKUPS-}" ]; then
+    exec sleep infinity
+else
+    exec sh -c 'slicd-sched crontab.bin | slicd-exec -- setuid %u sh -c'
+fi
