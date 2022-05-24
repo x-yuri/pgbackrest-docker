@@ -25,6 +25,7 @@ services:
       MAILGUN_DOMAIN: $MAILGUN_DOMAIN
       MAILGUN_FROM: $MAILGUN_FROM
       MAILGUN_TO: $MAILGUN_TO
+      STORAGE_BOX: $STORAGE_BOX
     volumes:
       - backups:/var/lib/pgbackrest
       - ./host-keys:/host-keys

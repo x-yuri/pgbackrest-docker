@@ -17,7 +17,7 @@ COPY backups.sh ./
 COPY pgbackrest-backups.conf /etc/pgbackrest/pgbackrest.conf
 COPY --from=slicd /bin/slicd-* /bin/setuid /bin/miniexec /bin/
 COPY crontab back-up.sh ./
-RUN set -x && apk add --no-cache pgbackrest openssh curl wait4ports pwgen \
+RUN set -x && apk add --no-cache pgbackrest openssh rsync curl wait4ports pwgen \
     && set +x && echo "root:`pwgen -1`" | chpasswd && set -x \
     && slicd-parser -s crontab -o crontab.bin
 CMD ["./backups.sh"]

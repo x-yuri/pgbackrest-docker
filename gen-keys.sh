@@ -2,7 +2,7 @@
 files=`find -maxdepth 1 -path './id_rsa' \
                      -o -path './authorized_keys' \
                      -o -path './host-keys' \
-                     -o -path './known_hosts*'`
+                     -o -path './known_hosts-*'`
 if [ "$files" ]; then
     t=`date +%Y%m%d-%H%M%S`
     mkdir ".bak-$t"
@@ -38,3 +38,4 @@ docker run --rm alpine:3.15 sh -euc '
 ' > keys.tar.gz
 tar xf keys.tar.gz
 rm keys.tar.gz
+cat known_hosts >> known_hosts-backups
