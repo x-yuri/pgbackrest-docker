@@ -4,7 +4,7 @@ mkdir -p ~postgres/.ssh
 cp id_rsa authorized_keys known_hosts ~postgres/.ssh
 chown -R postgres: ~postgres/.ssh
 /usr/sbin/sshd
-if [ "${DONT_START_DB-}" ]; then
+if [ "${DONT_START_DB-}" ] || [ "${DONT_START_STANDBY-}" ]; then
     exec sleep infinity
 else
     exec docker-entrypoint.sh postgres

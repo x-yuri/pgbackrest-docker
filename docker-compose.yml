@@ -3,16 +3,21 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-db
+      args:
+        ROLE: primary
     init: yes
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
       DONT_START_DB: $DONT_START_DB
+      ROLE: primary
     volumes:
       - db:/var/lib/postgresql/data
       - ./host-keys:/host-keys
       - ./id_rsa:/id_rsa
       - ./authorized_keys:/authorized_keys
       - ./known_hosts-db:/known_hosts
+    networks:
+      - db
 
   backups:
     build:
@@ -25,7 +30,37 @@ services:
       - ./id_rsa:/id_rsa
       - ./authorized_keys:/authorized_keys
       - ./known_hosts-backups:/known_hosts
+    networks:
+      - db
+
+  standby:
+    build:
+      context: .
+      dockerfile: Dockerfile-db
+      args:
+        ROLE: standby
+    init: yes
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      DONT_START_STANDBY: $DONT_START_STANDBY
+      ROLE: standby
+    volumes:
+      - standby:/var/lib/postgresql/data
+      - ./host-keys-standby:/host-keys
+      - ./id_rsa:/id_rsa
+      - ./authorized_keys:/authorized_keys
+      - ./known_hosts-standby:/known_hosts
+    networks:
+      db:
+        ipv4_address: 10.0.0.254
 
 volumes:
   db:
+  standby:
   backups:
+
+networks:
+  db:
+    ipam:
+      config:
+        - subnet: 10.0.0.0/24

@@ -1,8 +1,14 @@
 FROM postgres:12-alpine3.15
-COPY postgresql.conf db.sh ./
+ARG ROLE
+COPY postgresql.conf pg_hba.conf db.sh ./
 COPY db-init.sh /docker-entrypoint-initdb.d
-COPY pgbackrest-db.conf /etc/pgbackrest/pgbackrest.conf
+COPY pgbackrest-db.conf pgbackrest-standby.conf ./
 RUN set -x && apk add --no-cache pgbackrest openssh pwgen \
     && pg_versions uninstall \
-    && set +x && echo "postgres:`pwgen -1`" | chpasswd && set -x
+    && set +x && echo "postgres:`pwgen -1`" | chpasswd && set -x \
+    && if [ "$ROLE" = primary ]; then \
+        cp pgbackrest-db.conf /etc/pgbackrest/pgbackrest.conf; \
+    else \
+        cp pgbackrest-standby.conf /etc/pgbackrest/pgbackrest.conf; \
+    fi
 CMD ["./db.sh"]
