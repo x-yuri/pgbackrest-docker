@@ -1,6 +1,7 @@
 #!/bin/sh -eux
 echo "username=$STORAGE_BOX_USER" > /backup-creds.txt
 set +x; echo "password=$STORAGE_BOX_PASS" >> /backup-creds.txt; set -x
+wait4ports tcp://"`echo "$STORAGE_BOX" | cut -d/ -f3`":139
 mount.cifs -o cred=/backup-creds.txt,file_mode=0600,dir_mode=0700 "$STORAGE_BOX" /mnt
 cp host-keys/* /etc/ssh
 mkdir -p ~/.ssh

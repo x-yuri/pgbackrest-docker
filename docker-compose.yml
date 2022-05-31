@@ -7,6 +7,7 @@ services:
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
       DONT_START_DB: $DONT_START_DB
+      STORAGE_BOX: $STORAGE_BOX
     volumes:
       - db:/var/lib/postgresql/data
       - ./host-keys:/host-keys
@@ -34,6 +35,10 @@ services:
       - ./id_rsa:/id_rsa
       - ./authorized_keys:/authorized_keys
       - ./known_hosts-backups:/known_hosts
+
+  backup-storage:
+    image: dperson/samba
+    command: -u 'root;badpass' -s 'backup;/backup;no;no' -p
 
 volumes:
   db:
