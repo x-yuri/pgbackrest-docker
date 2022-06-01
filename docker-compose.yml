@@ -33,6 +33,15 @@ services:
       - ./authorized_keys:/authorized_keys
       - ./known_hosts-backups:/known_hosts
 
+  backup-storage:
+    build:
+      context: .
+      dockerfile: Dockerfile-backup-storage
+    init: yes
+    volumes:
+      - ./host-keys-backup-storage:/host-keys
+      - ./authorized_keys-backup-storage:/authorized_keys
+
 volumes:
   db:
   backups:

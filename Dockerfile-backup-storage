@@ -1,0 +1,5 @@
+FROM alpine:3.15
+COPY backup-storage.sh ./
+RUN set -x && apk add --no-cache openssh-server rsync pwgen \
+    && echo "root:`pwgen -1`" | chpasswd
+CMD ["./backup-storage.sh"]
