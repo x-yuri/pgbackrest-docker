@@ -1,0 +1,25 @@
+services:
+  standby:
+    build:
+      context: ..
+      dockerfile: standby/Dockerfile
+      args:
+        DB_IP: $DB_IP
+        DB_PORT: $DB_PORT
+        BACKUPS_IP: $BACKUPS_IP
+        BACKUPS_PORT: $BACKUPS_PORT
+    init: yes
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      DONT_START_STANDBY: $DONT_START_STANDBY
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ../host-keys-standby:/host-keys
+      - ../id_rsa:/id_rsa
+      - ../authorized_keys:/authorized_keys
+      - ../known_hosts-standby:/known_hosts
+    ports:
+      - $STANDBY_PORT:22
+
+volumes:
+  db:

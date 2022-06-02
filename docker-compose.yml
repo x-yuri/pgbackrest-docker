@@ -13,6 +13,10 @@ services:
       - ./id_rsa:/id_rsa
       - ./authorized_keys:/authorized_keys
       - ./known_hosts-db:/known_hosts
+    ports:
+      - $DB_PORT:5432
+    networks:
+      - db
 
   backups:
     build:
@@ -25,7 +29,17 @@ services:
       - ./id_rsa:/id_rsa
       - ./authorized_keys:/authorized_keys
       - ./known_hosts-backups:/known_hosts
+    ports:
+      - $BACKUPS_PORT:22
+    networks:
+      - db
 
 volumes:
   db:
   backups:
+
+networks:
+  db:
+    ipam:
+      config:
+        - subnet: 10.0.0.0/24
